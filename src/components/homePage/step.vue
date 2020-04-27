@@ -73,6 +73,8 @@ export default {
   letter-spacing: 3px
   font-size: 16px
   margin-top: 40px
+.next:active
+  background: #3D93F3
 .btn
   position: absolute
   bottom: 5%

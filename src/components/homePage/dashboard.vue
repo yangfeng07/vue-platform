@@ -1,10 +1,10 @@
 <template>
   <ul>
-    <li>
+    <li @click="toStepcgs">
       <img src="../../assets/cgs.png" alt="">
       <span>车购税</span>
     </li>
-    <li>
+    <li @click="toStepsb">
       <img src="../../assets/sb.png" alt="">
       <span style="color: #FEA100;">社保</span>
     </li>
@@ -14,7 +14,15 @@
 <script>
 
 export default {
-  name: 'Home'
+  name: 'Home',
+  methods: {
+    toStepcgs() {
+      this.$router.push({path:'/cgs'})
+    },
+    toStepsb() {
+      this.$router.push({path:'/sb'})
+    }
+  }
 }
 </script>
 

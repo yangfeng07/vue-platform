@@ -8,10 +8,16 @@
       <div class="phone-cont">
         <img src="../assets/icon-phone.png" alt="">
         <cube-input 
-          :model="value"
+          v-model="phone"
           :placeholder="placeholder"
           :type="type"
           :maxlength="maxlength" ></cube-input>
+        <cube-validator 
+          ref="validatorPhone" 
+          v-model="valid" 
+          :model="phone"
+          :rules="rulesPhone"
+          :messages="messages"></cube-validator>
       </div>
       <div class="phone-cont">
         <img src="../assets/icon-yzm.png" alt="">
@@ -20,22 +26,33 @@
           :placeholder="yzmplaceholder"
           :type="yzmtype"
           :maxlength="yzmmaxlength" ></cube-input>
-        <cube-button class="fsyzm" :inline="true">发送验证码</cube-button>
+        <cube-button @click="sendYzm" class="fsyzm" :inline="true">发送验证码</cube-button>
       </div>
-      <cube-button class="loginBtn" :inline="true">登录</cube-button>
+      <cube-button @click="login" class="loginBtn" :inline="true">登录</cube-button>
     </div>
   </div>
   
 </template>
 
 <script>
+  import { getYzm } from '@/request/api'
   export default {
     data() {
       return {
-        value: '',
+        phone: '',
         placeholder: '请输入手机号',
         maxlength: 11,
         type: 'number',
+        valid: undefined,
+        rulesPhone: {
+            required: true,
+            type: 'number',
+            len: 11,
+            pattern: /^1[3456789]\d{9}$/
+        },
+        messages: {
+          pattern: '请填写正确的手机号'
+        },
         yzm: '',
         yzmplaceholder: '请输入验证码',
         yzmmaxlength: 6,
@@ -43,6 +60,21 @@
       }
     },
     methods: {
+      sendYzm() {
+        if(this.phone=='') {
+          this.$createDialog({
+            type: 'alert',
+            content: '请填写手机号码',
+            icon: 'cubeic-alert'
+          }).show()
+        }
+        if(this.valid) {
+          getYzm(this.phone)
+        }
+      },
+      login() {
+        this.$router.push({path:'/Home'})
+      }
     }
   }
 </script>
@@ -54,7 +86,7 @@
 .cube-input {
   float: left;
   margin-left: 20px;
-  width: 60%;
+  width: 40%;
 }
 .loginBg {
   width: 100%;

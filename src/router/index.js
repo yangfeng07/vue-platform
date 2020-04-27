@@ -28,7 +28,9 @@ const router = new VueRouter({
             children: [
                 {path: '/dashboard', component: () => import('../components/homePage/dashboard'), name: '首页'},
                 {path: '/cgs', component: () => import('../components/homePage/cgs'), name: '车购税'},
-                {path: '/step', component: () => import('../components/homePage/step'), name: '步骤'},
+                {path: '/sb', component: () => import('../components/homePage/sb'), name: '社保'},
+                {path: '/step/:id', component: () => import('../components/homePage/step'), name: '步骤'},
+                {path: '/wdsq', component: () => import('../components/homePage/wdsq'), name: '社我的申请'},
             ]
         },
     ]

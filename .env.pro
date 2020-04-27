@@ -1,0 +1,1 @@
+VUE_APP_API_ROOT= http://7hmi9m.natappfree.cc

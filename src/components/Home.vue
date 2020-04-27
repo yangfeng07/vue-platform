@@ -5,7 +5,7 @@
         <div class="home-text">
             <i class="cubeic-person"></i>
             您好，152689746！
-            <span class="return">退出<i class="cubeic-arrow"></i></span>
+            <span @click="Return" class="return">退出<i class="cubeic-arrow"></i></span>
         </div>
     </div>
     <div class="home-body">
@@ -17,7 +17,12 @@
 <script>
 
 export default {
-  name: 'Home'
+  name: 'Home',
+  methods: {
+      Return() {
+          this.$router.push({path:'/'})
+      }
+  }
 }
 </script>
 
