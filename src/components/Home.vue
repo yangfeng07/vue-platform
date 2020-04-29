@@ -15,15 +15,13 @@
 </template>
 
 <script>
-import { getMenu } from '@/request/api'
 export default {
   name: 'Home',
   methods: {
       Return() {
           this.$router.push({path:'/'})
-          getMenu({ pid: 0 }).then( res => {
-              console.log(res)
-          })
+          sessionStorage.removeItem('token')
+          
       }
   }
 }

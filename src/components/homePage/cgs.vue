@@ -1,36 +1,91 @@
 <template>
   <ul>
-    <li @click="toStep">
+    <!-- <li @click="toStep">
       <img src="../../assets/tcts.png" alt="">
-      <span>提交退车<br>退税资料</span>
+      <span>提交退车退税资料</span>
     </li>
     <li @click="toStep" class="left">
       <img src="../../assets/szc.png" alt="">
-      <span style="font-size:14px;line-height:18px;margin-top:-27px;left: 10px;color: #00A6B3;">提交设有固定<br>装置的市政车<br>辆免税资料</span>
+      <span style="font-size:14px;line-height:18px;margin-top:-27px;left: 10px;color: #00A6B3;width: 85px;">提交设有固定装置的市政车辆免税资料</span>
     </li>
     <li @click="toStep" class="right">
       <img src="../../assets/dsg.png" alt="">
-      <span style="font-size:14px;line-height:18px;margin-top:-27px;left: 20px;color: #525CB2;">提交大使<br>馆车辆免<br>税资料</span>
+      <span style="font-size:14px;line-height:18px;margin-top:-27px;left: 20px;color: #525CB2;width: 65px;">提交大使馆车辆免税资料</span>
     </li>
     <li @click="toStep" class="left">
       <img src="../../assets/lxry.png" alt="">
-      <span style="font-size:14px;line-height:18px;margin-top:-27px;left: 20px;color: #AB8304;">提交归国留学<br>人员车辆免税<br>资料</span>
+      <span style="font-size:14px;line-height:18px;margin-top:-27px;left: 20px;color: #AB8304;width: 70px;">提交归国留学人员车辆免税资料</span>
     </li>
     <li @click="toStep" class="right">
       <img src="../../assets/fwzy.png" alt="">
-      <span style="font-size:14px;line-height:18px;margin-top:-9px;left: 20px;color: #3976B0;">服务指引</span>
+      <span style="font-size:14px;line-height:18px;margin-top:-9px;left: 20px;color: #3976B0;width: 65px;">服务指引</span>
     </li>
     <li @click="toWdsq">
       <img src="../../assets/wdsq.png" alt="">
       <span style="color: #9A5C04;margin-top: -15px;">我的申请</span>
+    </li> -->
+    <li v-for="item in menuData" :key="item.typeId" @click="toStep(item.typeId)" :class="styleData.filter(i => i.id == item.typeId)[0].className">
+      <img :src="styleData.filter(i => i.id == item.typeId)[0].imgSrc" alt="">
+      <span :style="styleData.filter(i => i.id == item.typeId)[0].spanStyle">{{ item.typeName }}</span>
     </li>
   </ul>
 </template>
 
 <script>
-
+import { getMenu } from '@/request/api'
 export default {
   name: 'Home',
+  data() {
+    return {
+      menuData: '',
+      styleData: [
+        {
+          id: '01',
+          className: '',
+          imgSrc: require('../../assets/tcts.png'),
+          spanStyle: ''
+        },
+        {
+          id: '02',
+          className: 'left',
+          imgSrc: require('../../assets/szc.png'),
+          spanStyle: 'font-size:14px;line-height:18px;margin-top:-27px;left: 10px;color: #00A6B3;width: 85px;'
+        },
+        {
+          id: '03',
+          className: 'right',
+          imgSrc: require('../../assets/dsg.png'),
+          spanStyle: 'font-size:14px;line-height:18px;margin-top:-27px;left: 20px;color: #525CB2;width: 65px;'
+        },
+        {
+          id: '04',
+          className: 'left',
+          imgSrc: require('../../assets/lxry.png'),
+          spanStyle: 'font-size:14px;line-height:18px;margin-top:-27px;left: 20px;color: #AB8304;width: 70px;'
+        },
+        {
+          id: '05',
+          className: 'right',
+          imgSrc: require('../../assets/fwzy.png'),
+          spanStyle: 'font-size:14px;line-height:18px;margin-top:-9px;left: 20px;color: #3976B0;width: 65px;'
+        },
+        {
+          id: '06',
+          className: '',
+          imgSrc: require('../../assets/wdsq.png'),
+          spanStyle: 'color: #9A5C04;margin-top: -15px;'
+        },
+      ]
+    }
+  },
+  created() {
+    getMenu({ pid: 0 }).then( res => {
+      console.log(res.data)
+      if(res.code == '000000') {
+        this.menuData = res.data
+      }
+    })
+  },
   methods: {
       toStep() {
           this.$router.push({path:'/step/1'})
@@ -71,5 +126,6 @@ span{
   left: 30px;
   top: 50%;
   margin-top: -30px;
+  width: 100px;
 }
 </style>

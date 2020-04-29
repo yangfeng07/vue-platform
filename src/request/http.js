@@ -23,8 +23,8 @@ const service = axios.create({
 //请求拦截
 service.interceptors.request.use(
     config => {
-        const token = sessionStorage.get('token')
-        if(token != '') {
+        const token = sessionStorage['token']
+        if(token) {
             config.headers.token = token
         }
         return config

@@ -80,7 +80,6 @@
         this.time--
       },
       sendYzm(refId) {
-        console.log(this.$store.state.token)
         if(this.phone=='') {
           this.$createDialog({
             type: 'alert',
@@ -111,8 +110,7 @@
         }).then( res => {
           console.log(res)
           if(res.code == '000000') {
-            // this.$store.state.token = res.data
-            sessionStorage.setItem("token", res.data);
+            sessionStorage.setItem("token", res.data)
             this.$router.push({path:'/Home'})
           } else {
             this.$createDialog({
