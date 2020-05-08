@@ -24,7 +24,7 @@
       <img src="../../assets/wdsq.png" alt="">
       <span style="color: #9A5C04;margin-top: -15px;">我的申请</span>
     </li> -->
-    <li v-for="item in menuData" :key="item.typeId" @click="toStep(item.typeId)" :class="styleData.filter(i => i.id == item.typeId)[0].className">
+    <li v-for="item in menuData" :key="item.typeId" @click="toStep(item.typeId, item.typeName, 0, item.subTypeList)" :class="styleData.filter(i => i.id == item.typeId)[0].className">
       <img :src="styleData.filter(i => i.id == item.typeId)[0].imgSrc" alt="">
       <span :style="styleData.filter(i => i.id == item.typeId)[0].spanStyle">{{ item.typeName }}</span>
     </li>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { getMenu } from '@/request/api'
+import { getMenu, createBus } from '@/request/api'
 export default {
   name: 'Home',
   data() {
@@ -87,8 +87,30 @@ export default {
     })
   },
   methods: {
-      toStep() {
-          this.$router.push({path:'/step/1'})
+      toStep(id, name, subId, subTypeList) {
+        if(id == '06') {
+          this.toWdsq()
+          return false
+        }
+        createBus({
+          userId: localStorage.getItem("userId"),
+          typeId: id,
+          typeName: name
+        }).then( res => {
+          if(res.code == '000000') {
+            console.log(res.data)
+            localStorage.setItem("subTypeList", JSON.stringify(subTypeList))
+            localStorage.setItem("bzText", res.data.name)
+            localStorage.setItem("masterId",res.data.id)
+            this.$router.push({path:'/step/'+subId})
+          } else {
+            this.$createDialog({
+              type: 'alert',
+              content: res.msg,
+              icon: 'cubeic-alert'
+            }).show()
+          }
+        })
       },
       toWdsq() {
           this.$router.push({path:'/wdsq'})

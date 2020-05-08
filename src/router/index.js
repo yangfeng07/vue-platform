@@ -26,11 +26,11 @@ const router = new VueRouter({
             menuShow: true,
             iconCls: 'iconfont icon-home',
             children: [
-                {path: '/dashboard', component: () => import('../components/homePage/dashboard'), name: '首页'},
-                {path: '/cgs', component: () => import('../components/homePage/cgs'), name: '车购税'},
-                {path: '/sb', component: () => import('../components/homePage/sb'), name: '社保'},
-                {path: '/step/:id', component: () => import('../components/homePage/step'), name: '步骤'},
-                {path: '/wdsq', component: () => import('../components/homePage/wdsq'), name: '社我的申请'},
+                {path: '/dashboard', meta: {keepAlive: false, isBack: false}, component: () => import('../components/homePage/dashboard'), name: '首页'},
+                {path: '/cgs', meta: {keepAlive: false, isBack: false}, component: () => import('../components/homePage/cgs'), name: 'cgs'},
+                {path: '/sb', meta: {keepAlive: false, isBack: false}, component: () => import('../components/homePage/sb'), name: 'sb'},
+                {path: '/step/:id', meta: {keepAlive: true, isBack: false}, name: 'step', component: () => import('../components/homePage/step')},
+                {path: '/wdsq', meta: {keepAlive: false, isBack: false}, component: () => import('../components/homePage/wdsq'), name: '社我的申请'},
             ]
         },
     ]

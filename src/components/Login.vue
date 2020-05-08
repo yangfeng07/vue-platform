@@ -111,6 +111,7 @@
           console.log(res)
           if(res.code == '000000') {
             sessionStorage.setItem("token", res.data)
+            localStorage.setItem("userId",this.phone)
             this.$router.push({path:'/Home'})
           } else {
             this.$createDialog({

@@ -13,7 +13,7 @@ const toast = Toast.$create({
 
 
 //创建axios实例
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 const service = axios.create({
     baseURL: '/api',
     timeout: 3000
@@ -30,6 +30,7 @@ service.interceptors.request.use(
         return config
     },
     error => {
+        console.log(15)
         return Promise.error(error);
     }
 )
@@ -38,14 +39,15 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     toast.hide(),
     response => {
-        if(response.status === 200) {
+        console.log(response)
+        if(response.status && response.status === 200) {
             return Promise.resolve(response)
         } else {
             Dialog.$create({
                 type: 'alert',
                 content: response.message,
                 icon: 'cubeic-alert'
-            })
+            }).show()
             return Promise.reject(response)
         }
     },

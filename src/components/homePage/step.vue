@@ -1,48 +1,132 @@
 <template>
   <div style="position: relative;height: 100%;">
-      <p class="bzTitle">退车退税资料,请依照下列要求上传对应文件：</p>
-      <p class="xTitle">1、车辆购置税退税申请表</p>
+      <p class="bzTitle"><span>{{ bzText }}</span>,请依照下列要求上传对应文件：</p>
+      <p class="xTitle">{{ tIndex }}、{{ xText }}</p>
       <cube-upload
         ref="upload"
         v-model="files"
         :action="action"
         @files-added="addedHandler"
-        @file-error="errHandler">
+        @file-error="errHandler"
+        @file-removed="removeHandler">
         <div class="clear-fix">
             <cube-upload-file v-for="(file, i) in files" :file="file" :key="i" @click="showImage"></cube-upload-file>
             <cube-upload-btn :multiple="false">
             </cube-upload-btn>
         </div>
       </cube-upload>
-      <cube-button class="next" :inline="true">下一步</cube-button>
+      <div>
+        <cube-button class="prev" v-show="prev" @click="prevFun" :inline="true">上一步</cube-button>
+        <cube-button class="next" @click="nextFun" :inline="true">下一步</cube-button>
+      </div>
       <cube-button v-show="play" @click="btnClick" class="btn">旋转</cube-button>
   </div>
 </template>
 
 <script>
 let current = 0
+
+import { Dialog } from 'cube-ui'
+import { createBusRemind } from '@/request/api'
 export default {
   name: 'Home',
   data() {
     return {
-      action: '//jsonplaceholder.typicode.com/photos/',
+      action: {
+        target: '/api/client/uploadFile',
+        headers: {
+          token: sessionStorage.getItem("token")
+        },
+        data: {
+          userId: localStorage.getItem("userId"),
+          detailTypeId: '001',
+          masterId: localStorage.getItem("masterId")
+        },
+        checkSuccess: this.checkSuccess
+      },
+      sfysc: false,
       files: [],
       imgs: [],
-      play: false
+      bzText: '提交退车退税资料',
+      tIndex: 1,
+      xText: "车辆购置税退税申请表",
+      play: false,
+      subTypeList: [],
+      id: '',
+      prev: false
     }
   },
+  created() {
+    this.subTypeList = JSON.parse(localStorage.getItem("subTypeList"))
+    this.id = this.$route.params.id
+    this.bzText = localStorage.getItem("bzText")
+    this.tIndex = +this.id + 1
+    this.xText = this.subTypeList[+this.id].subTypeName
+    if(this.id > 0) {
+      this.prev = true
+    }
+    this.action.data.detailTypeId = this.subTypeList[+this.id].subTypeId
+  },
+  beforeRouteEnter(to, from, next) {
+    if (from.name == 'cgs' || from.name == 'sb') {
+      to.meta.isBack = true
+    }
+    next();
+  },
+  activated() {
+    if (this.$route.meta.isBack) {
+      const file = this.files[0]
+      file && this.$refs.upload.removeFile(file)
+      this.sfysc = false
+    }
+    this.$route.meta.isBack = false
+  },
   methods: {
+    checkSuccess(res) {
+      if(res.code == '000000') {
+        this.sfysc = true
+        return true
+      }
+      return false
+    },
+    prevFun() {
+      this.$router.push({name:'step',params: {id: this.id-1}})
+    },
+    nextFun() {
+      if(!this.sfysc) {
+        Dialog.$create({
+          type: 'alert',
+          title: '请先上传文件',
+          icon: 'cubeic-alert'
+        }).show()
+        return false
+      }
+      if(this.tIndex == this.subTypeList.length) {
+        createBusRemind({
+          userId: localStorage.getItem("userId"),
+          maseterId: localStorage.getItem("maseterId")
+        }).then( res => {
+          if(res.code == '000000') {
+            Dialog.$create({
+              type: 'alert',
+              title: '上传已完成，请等待审核',
+              icon: 'cubeic-alert'
+            }).show()
+          }
+        })
+        return false
+      }
+      this.$router.push({name:'step',params: {id: +this.id+1}})
+    },
     addedHandler() {
       const file = this.files[0]
       file && this.$refs.upload.removeFile(file)
     },
-    errHandler(file) {
-      const msg = file.response.message
-      this.$createToast({
-        type: 'warn',
-        txt: msg,
-        time: 1000
-      }).show()
+    errHandler() {
+      this.sfysc = false
+    },
+    removeHandler() {
+      this.sfysc = false
     },
     showImage() {
       this.play = true
@@ -64,17 +148,18 @@ export default {
 
 <style lang="stylus" scoped>
 .next
-  width: 80%
-  height: 40px
-  margin: 0 auto
   background: #2B8AFF
   color: #fff
+.next:active
+  background: #3D93F3
+.prev,.next
+  width: 40%
+  height: 40px
+  margin: 0 5px
   border-radius: 25px
   letter-spacing: 3px
   font-size: 16px
   margin-top: 40px
-.next:active
-  background: #3D93F3
 .btn
   position: absolute
   bottom: 5%
@@ -86,7 +171,7 @@ export default {
 .bzTitle,.xTitle
    font-size: 18px
    text-align: left
-   text-indent: 10px
+   padding: 0 10px
    line-height: 30px
 .xTitle
    color: #FE8900

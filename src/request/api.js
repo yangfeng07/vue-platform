@@ -6,3 +6,9 @@ export const getYzm = data => get(`/sms/${data}`, data)
 export const login = data => post('/passport/login', data)
 //获取菜单
 export const getMenu = data => get('/client/queryBusMenu', data)
+//发起业务接口
+export const createBus = data => post('/client/createBus', data)
+//上传文件接口
+export const uploadFile = data => post('/client/uploadFile', data)
+//等待审核接口
+export const createBusRemind = data => post('/client/createBusRemind', data)

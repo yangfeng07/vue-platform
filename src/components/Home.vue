@@ -4,12 +4,15 @@
         <img class="home-bg" src="../assets/homeBg.png" alt="">
         <div class="home-text">
             <i class="cubeic-person"></i>
-            您好，152689746！
+            您好，{{ userId }}！
             <span @click="Return" class="return">退出<i class="cubeic-arrow"></i></span>
         </div>
     </div>
     <div class="home-body">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view v-if="$route.meta.keepAlive" :key="$route.fullPath"></router-view>
+        </keep-alive>
+        <router-view v-if="!$route.meta.keepAlive" :key="$route.fullPath"></router-view>
     </div>
   </div>
 </template>
@@ -17,11 +20,18 @@
 <script>
 export default {
   name: 'Home',
+  data() {
+    return {
+        userId: '111'
+    }
+  },
+  created() {
+    this.userId = localStorage.getItem("userId")
+  },
   methods: {
       Return() {
-          this.$router.push({path:'/'})
-          sessionStorage.removeItem('token')
-          
+          this.$router.push({path:'/dashboard'})
+          this.$router.go(0)
       }
   }
 }
