@@ -78,12 +78,15 @@ export default {
       ]
     }
   },
-  created() {
-    getMenu({ pid: 0 }).then( res => {
-      console.log(res.data)
-      if(res.code == '000000') {
-        this.menuData = res.data
-      }
+  beforeRouteEnter(to, from, next) {
+    localStorage.setItem("cnjr", "cgs")
+    next(vm=>{
+      getMenu({ pid: 0 }).then( res => {
+        console.log(res.data)
+        if(res.code == '000000') {
+          vm.menuData = res.data
+        }
+      })
     })
   },
   methods: {

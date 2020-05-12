@@ -14,9 +14,26 @@
 </template>
 
 <script>
+import { queryBusMasterDetail, queryMyBusApp } from '@/request/api'
 
 export default {
   name: 'Home',
+  created() {
+    queryBusMasterDetail({
+      masterId: localStorage.getItem("masterId")
+    }).then( res => {
+      console.log(res)
+    })
+    queryMyBusApp({ 
+      userId: localStorage.getItem("userId"),
+      page: 1,
+      pageSize: 5,
+      status: '',
+      createtime: '2020-02'
+    }).then( res => {
+      console.log(res)
+    })
+  },
   methods: {
       
   }
@@ -28,5 +45,5 @@ table
   width: 100%
   border: 1px solid #000
   th,td
-    border: 1px solid #000
+    border: 1px solid #ccc
 </style>

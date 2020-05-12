@@ -19,6 +19,9 @@
 
 export default {
   name: 'Home',
+  created() {
+    localStorage.setItem('cnjr', 'sb')
+  },
   methods: {
       toStep() {
           this.$router.push({path:'/step/1'})

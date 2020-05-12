@@ -8,7 +8,7 @@ Vue.use(Dialog)
 
 const toast = Toast.$create({
     time: 0,
-    txt: 'Toast time 0'
+    txt: '请求中'
 })
 
 
@@ -23,6 +23,7 @@ const service = axios.create({
 //请求拦截
 service.interceptors.request.use(
     config => {
+        toast.show()
         const token = sessionStorage['token']
         if(token) {
             config.headers.token = token
@@ -30,15 +31,14 @@ service.interceptors.request.use(
         return config
     },
     error => {
-        console.log(15)
         return Promise.error(error);
     }
 )
 
 //响应拦截器
 service.interceptors.response.use(
-    toast.hide(),
     response => {
+        toast.hide()
         console.log(response)
         if(response.status && response.status === 200) {
             return Promise.resolve(response)
@@ -52,11 +52,20 @@ service.interceptors.response.use(
         }
     },
     error => {
-        Dialog.$create({
-            type: 'alert',
-            content: error.message,
-            icon: 'cubeic-alert'
-        })
+        toast.hide()
+        if(error.code == 'ECONNABORTED' && error.message.indexOf('timeout')!=-1) {
+            Dialog.$create({
+                type: 'alert',
+                content: '请求超时，请稍后再试！',
+                icon: 'cubeic-alert'
+            }).show()
+        } else {
+            Dialog.$create({
+                type: 'alert',
+                content: '请求出错，请稍后再试！',
+                icon: 'cubeic-alert'
+            }).show()
+        }
         return Promise.reject(error)
     }
 )
