@@ -2,7 +2,7 @@
   <div>
     <div class="timeWrap">
       <span>时间：</span>
-      <cube-input @focus="showDatePicker" class="timeIpt"  v-model="value" ></cube-input>
+      <cube-input class="timeIpt" :readonly="true" v-model="value" ></cube-input>
     </div>
     <div class="tableWrap">
       <table style="width: 590px">
@@ -18,35 +18,22 @@
           <td>111</td>
           <td>111</td>
         </tr>
-        <tr>
-          <td>提交设有固定装置的市政车辆免税资料</td>
-          <td>111</td>
-          <td>111</td>
-          <td>111</td>
-        </tr>
       </table>
     </div>
-    <div class="btnWrap" v-show="sfData">
-      <cube-button :inline="true" :primary="true">上一页</cube-button>
-      <cube-select @change="queryTab" v-model="pageSec" :options="options"></cube-select>
-      <cube-button :inline="true" :primary="true">下一页</cube-button>
-    </div>
-    <p v-show="!sfData">暂无数据.....</p>
+    <p>暂无数据.....</p>
+    <cube-button @click="showDatePicker">Date Picker</cube-button>
   </div>
 </template>
 
 <script>
 import { queryBusMasterDetail, queryMyBusApp } from '@/request/api'
-import { Dialog } from 'cube-ui'
+
 export default {
   name: 'Home',
   data() {
     return {
       value: 111,
-      items: [],
-      options: [],
-      pageSec: 1,
-      sfData: true
+      items: []
     }
   },
   created() {
@@ -56,7 +43,15 @@ export default {
     }).then( res => {
       console.log(res)
     })
-    this.queryTab()
+    queryMyBusApp({ 
+      userId: localStorage.getItem("userId"),
+      page: 1,
+      pageSize: 5,
+      status: '',
+      createtime: this.value
+    }).then( res => {
+      console.log(res)
+    })
   },
   methods: {
     showDatePicker() {
@@ -74,34 +69,6 @@ export default {
     },
     selectHandle(selectedVal, selectedText) {
       this.value = selectedText.join('-')
-      this.queryTab()
-    },
-    queryTab() {
-      queryMyBusApp({ 
-        userId: localStorage.getItem("userId"),
-        page: this.pageSec,
-        pageSize: 5,
-        status: '',
-        createtime: this.value
-      }).then( res => {
-        console.log(res)
-        if(res.code == '000000') {
-          this.items = res.data.rows
-          if(res.data.total == 0) {
-            this.sfData = false
-          } else {
-            for(var i = 1; i< res.data.total; i++) {
-              this.options.push(i)
-            }
-          }
-        } else {
-          Dialog.$create({
-              type: 'alert',
-              content: res.message,
-              icon: 'cubeic-alert'
-          }).show()
-        }
-      })
     }
   }
 }
@@ -132,22 +99,10 @@ export default {
     tr:nth-child(even)
       background #fff
     th,td
-      border none
+      border 0
       vertical-align middle
     th
       font-size 20px
       line-height 40px
       color #fff
-.btnWrap
-  margin 10px 0
-  height 50px
-  .cube-btn-inline
-    height 30px
-    margin 10px 0
-  .cube-select
-    height 40px
-    margin-top 5px
-    display inline-block
-    vertical-align top
-    width 20%
 </style>

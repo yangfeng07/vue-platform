@@ -26,27 +26,26 @@
         </tr>
       </table>
     </div>
-    <div class="btnWrap" v-show="sfData">
+    <div class="btnWrap">
       <cube-button :inline="true" :primary="true">上一页</cube-button>
-      <cube-select @change="queryTab" v-model="pageSec" :options="options"></cube-select>
+      <cube-select v-model="pageSec" :options="options"></cube-select>
       <cube-button :inline="true" :primary="true">下一页</cube-button>
     </div>
-    <p v-show="!sfData">暂无数据.....</p>
+    <p>暂无数据.....</p>
   </div>
 </template>
 
 <script>
 import { queryBusMasterDetail, queryMyBusApp } from '@/request/api'
-import { Dialog } from 'cube-ui'
+
 export default {
   name: 'Home',
   data() {
     return {
       value: 111,
       items: [],
-      options: [],
-      pageSec: 1,
-      sfData: true
+      options: [1,2,3,4,5],
+      pageSec: 1
     }
   },
   created() {
@@ -56,7 +55,15 @@ export default {
     }).then( res => {
       console.log(res)
     })
-    this.queryTab()
+    queryMyBusApp({ 
+      userId: localStorage.getItem("userId"),
+      page: 1,
+      pageSize: 5,
+      status: '',
+      createtime: this.value
+    }).then( res => {
+      console.log(res)
+    })
   },
   methods: {
     showDatePicker() {
@@ -74,34 +81,6 @@ export default {
     },
     selectHandle(selectedVal, selectedText) {
       this.value = selectedText.join('-')
-      this.queryTab()
-    },
-    queryTab() {
-      queryMyBusApp({ 
-        userId: localStorage.getItem("userId"),
-        page: this.pageSec,
-        pageSize: 5,
-        status: '',
-        createtime: this.value
-      }).then( res => {
-        console.log(res)
-        if(res.code == '000000') {
-          this.items = res.data.rows
-          if(res.data.total == 0) {
-            this.sfData = false
-          } else {
-            for(var i = 1; i< res.data.total; i++) {
-              this.options.push(i)
-            }
-          }
-        } else {
-          Dialog.$create({
-              type: 'alert',
-              content: res.message,
-              icon: 'cubeic-alert'
-          }).show()
-        }
-      })
     }
   }
 }
@@ -146,8 +125,7 @@ export default {
     margin 10px 0
   .cube-select
     height 40px
-    margin-top 5px
+    margin-top -5px
     display inline-block
-    vertical-align top
     width 20%
 </style>

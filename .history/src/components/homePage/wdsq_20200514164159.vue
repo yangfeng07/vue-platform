@@ -90,7 +90,7 @@ export default {
           if(res.data.total == 0) {
             this.sfData = false
           } else {
-            for(var i = 1; i< res.data.total; i++) {
+            for(var i =1; i< res.data.total; i++) {
               this.options.push(i)
             }
           }

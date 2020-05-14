@@ -28,7 +28,7 @@
     </div>
     <div class="btnWrap" v-show="sfData">
       <cube-button :inline="true" :primary="true">上一页</cube-button>
-      <cube-select @change="queryTab" v-model="pageSec" :options="options"></cube-select>
+      <cube-select v-model="pageSec" :options="options"></cube-select>
       <cube-button :inline="true" :primary="true">下一页</cube-button>
     </div>
     <p v-show="!sfData">暂无数据.....</p>
@@ -44,7 +44,7 @@ export default {
     return {
       value: 111,
       items: [],
-      options: [],
+      options: [1,2,3,4,5],
       pageSec: 1,
       sfData: true
     }
@@ -74,7 +74,6 @@ export default {
     },
     selectHandle(selectedVal, selectedText) {
       this.value = selectedText.join('-')
-      this.queryTab()
     },
     queryTab() {
       queryMyBusApp({ 
@@ -89,10 +88,6 @@ export default {
           this.items = res.data.rows
           if(res.data.total == 0) {
             this.sfData = false
-          } else {
-            for(var i = 1; i< res.data.total; i++) {
-              this.options.push(i)
-            }
           }
         } else {
           Dialog.$create({

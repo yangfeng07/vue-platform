@@ -94,14 +94,14 @@
         if(this.valid) {
           toast.show()
           getYzm(this.phone).then( res => {
-            toast.hide()
             this.popupText = res
-            const component = this.$refs[refId]
-            component.show()
-            setTimeout(() => {
-              component.hide()
-            }, 1000)
+            // const component = this.$refs[refId]
+            // component.show()
+            // setTimeout(() => {
+            //   component.hide()
+            // }, 1000)
             if(res == '发送成功') {
+              toast.hide()
               this.yzmText = this.time + 's后重新发送'
               this.disabled = true
               this.timer = setInterval(this.getTime, 1000)

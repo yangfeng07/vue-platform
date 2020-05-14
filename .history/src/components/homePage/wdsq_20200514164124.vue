@@ -44,7 +44,7 @@ export default {
     return {
       value: 111,
       items: [],
-      options: [],
+      options: [1,2,3,4,5],
       pageSec: 1,
       sfData: true
     }
@@ -90,8 +90,8 @@ export default {
           if(res.data.total == 0) {
             this.sfData = false
           } else {
-            for(var i = 1; i< res.data.total; i++) {
-              this.options.push(i)
+            for(var i =1; i< res.data.total; i++) {
+              console.log(i)
             }
           }
         } else {
