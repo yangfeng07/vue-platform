@@ -1,9 +1,8 @@
 import axios from 'axios'
 import Vue from 'vue'
 import QS from 'qs'
-import { Toast, Dialog } from 'cube-ui'
+import { Dialog } from 'cube-ui'
 
-Vue.use(Toast)
 Vue.use(Dialog)
 
 

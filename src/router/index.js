@@ -28,7 +28,7 @@ const router = new VueRouter({
             children: [
                 {path: '/dashboard', meta: {keepAlive: false, isBack: false}, component: () => import('../components/homePage/dashboard'), name: '首页'},
                 {path: '/cgs', meta: {keepAlive: false, isBack: false}, component: () => import('../components/homePage/cgs'), name: 'cgs'},
-                {path: '/sb', meta: {keepAlive: false, isBack: false}, component: () => import('../components/homePage/sb'), name: 'sb'},
+                {path: '/socialsecurity', meta: {keepAlive: false, isBack: false}, component: () => import('../components/homePage/sb'), name: 'sb'},
                 {path: '/step/:id', meta: {keepAlive: true, isBack: false}, name: 'step', component: () => import('../components/homePage/step')},
                 {path: '/wdsq', meta: {keepAlive: false, isBack: false}, component: () => import('../components/homePage/wdsq'), name: '社我的申请'},
             ]

@@ -27,7 +27,7 @@
 let current = 0
 
 import { Dialog } from 'cube-ui'
-import { createBusRemind } from '@/request/api'
+import { createBusRemind, repply } from '@/request/api'
 export default {
   name: 'Home',
   data() {
@@ -35,12 +35,12 @@ export default {
       action: {
         target: '/api/client/uploadFile',
         headers: {
-          token: sessionStorage.getItem("token")
+          token: this.$store.getters.token
         },
         data: {
-          userId: localStorage.getItem("userId"),
+          userId: this.$store.getters.userId,
           detailTypeId: '001',
-          masterId: localStorage.getItem("masterId")
+          masterId: this.$store.getters.masterId
         },
         checkSuccess: this.checkSuccess
       },
@@ -57,10 +57,9 @@ export default {
     }
   },
   created() {
-    this.subTypeList = JSON.parse(localStorage.getItem("subTypeList"))
-    console.log(this.subTypeList)
+    this.subTypeList = this.$store.getters.subTypeList
     this.id = this.$route.params.id
-    this.bzText = localStorage.getItem("bzText")
+    this.bzText = this.$store.getters.bzText
     this.tIndex = +this.id + 1
     this.xText = this.subTypeList[+this.id].subTypeName
     if(this.id > 0) {
@@ -70,7 +69,6 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     if (from.name == 'cgs' || from.name == 'sb') {
-      console.log(to)
       to.meta.isBack = true
     }
     next();
@@ -105,21 +103,35 @@ export default {
         return false
       }
       if(this.tIndex == this.subTypeList.length) {
-        createBusRemind({
-          userId: localStorage.getItem("userId"),
-          maseterId: localStorage.getItem("maseterId")
-        }).then( res => {
-          if(res.code == '000000') {
-            Dialog.$create({
-              type: 'alert',
-              title: '上传已完成，请等待审核',
-              icon: 'cubeic-alert'
-            }).show()
-          }
-        })
+        if(localStorage.getItem("sfWdsq") == "false") {
+          this.createSh(createBusRemind)
+        } else {
+          this.createSh(repply)
+        }
         return false
       }
       this.$router.push({name:'step',params: {id: +this.id+1}})
+    },
+    createSh(method) {
+      method({
+        userId: this.$store.getters.userId,
+        masterId: this.$store.getters.masterId
+      }).then( res => {
+        if(res.code == '000000') {
+          Dialog.$create({
+            type: 'alert',
+            title: '上传已完成，请等待审核',
+            icon: 'cubeic-alert',
+            onConfirm: () => {
+              if(this.$store.getters.cnjr == 'cgs') {
+                this.$router.push({path:'/cgs'})
+              } else {
+                this.$router.push({path:'/sb'})
+              }
+            }
+          }).show()
+        }
+      })
     },
     addedHandler() {
       const file = this.files[0]

@@ -12,24 +12,20 @@
           <th style="width: 180px">上传时间</th>
           <th style="width: 100px">操作</th>
         </tr>
-        <tr>
-          <td>提交设有固定装置的市政车辆免税资料</td>
-          <td>111</td>
-          <td>111</td>
-          <td>111</td>
-        </tr>
-        <tr>
-          <td>提交设有固定装置的市政车辆免税资料</td>
-          <td>111</td>
-          <td>111</td>
-          <td>111</td>
+        <tr v-for="item in items" :key="item.busRemindId">
+          <td>{{ item.busName }}</td>
+          <td>{{ item.busStatus==0?'未审核' : (item.busStatus==1?'审核通过' : '审核未通过') }}</td>
+          <td>{{ item.createtime }}</td>
+          <td>
+            <button @click="reload(item.busMasterId, item.busName)" v-show="item.busStatus==0?true : (item.busStatus==1?false : true)">重新上传</button>
+          </td>
         </tr>
       </table>
     </div>
     <div class="btnWrap" v-show="sfData">
-      <cube-button :inline="true" :primary="true">上一页</cube-button>
+      <cube-button @click="btnQuery('prev')" :inline="true">上一页</cube-button>
       <cube-select @change="queryTab" v-model="pageSec" :options="options"></cube-select>
-      <cube-button :inline="true" :primary="true">下一页</cube-button>
+      <cube-button @click="btnQuery('next')" :inline="true">下一页</cube-button>
     </div>
     <p v-show="!sfData">暂无数据.....</p>
   </div>
@@ -37,7 +33,12 @@
 
 <script>
 import { queryBusMasterDetail, queryMyBusApp } from '@/request/api'
-import { Dialog } from 'cube-ui'
+import { Dialog, Toast } from 'cube-ui'
+import { mapActions } from 'vuex'
+const toast = Toast.$create({
+                txt: '加载中...',
+                mask: true
+              })
 export default {
   name: 'Home',
   data() {
@@ -46,19 +47,22 @@ export default {
       items: [],
       options: [],
       pageSec: 1,
-      sfData: true
+      sfData: true,
+      total: null,
     }
   },
-  created() {
-    this.value = new Date().getFullYear() + '-' + (new Date().getMonth()+1)
-    queryBusMasterDetail({
-      masterId: localStorage.getItem("masterId")
-    }).then( res => {
-      console.log(res)
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+        vm.value = new Date().getFullYear() + '-' + (new Date().getMonth()+1)
+        vm.queryFirst()
     })
-    this.queryTab()
+  },
+  created() {
+    // this.value = new Date().getFullYear() + '-' + (new Date().getMonth()+1)
+    // this.queryTab()
   },
   methods: {
+    ...mapActions(['GetSubList', 'GetBzText', 'GetMasterId']),
     showDatePicker() {
       if (!this.datePicker) {
         this.datePicker = this.$createDatePicker({
@@ -76,21 +80,44 @@ export default {
       this.value = selectedText.join('-')
       this.queryTab()
     },
-    queryTab() {
+    reload(masterId, name) {
+      localStorage.setItem("sfWdsq", "true")
+      this.GetMasterId(masterId)
+      this.GetBzText(name)
+      this.$store.dispatch('GetMasterId',masterId)
+      queryBusMasterDetail({
+        masterId: masterId
+      }).then( res => {
+        console.log(res)
+        console.log(this.$store.getters.subTypeList)
+        var arr = res.data.map(function(item){
+          return {
+                    subTypeDescription: item.description,
+                    subTypeId: item.busDetailId,
+                    subTypeName: item.busDetailName,
+                  }
+        })
+        this.GetSubList(arr)
+        this.$router.push({path:'/step/0'})
+      })
+    },
+    queryFirst() {
+      toast.show()
       queryMyBusApp({ 
-        userId: localStorage.getItem("userId"),
+        userId: this.$store.getters.userId,
         page: this.pageSec,
         pageSize: 5,
         status: '',
         createtime: this.value
       }).then( res => {
-        console.log(res)
+        toast.hide()
         if(res.code == '000000') {
           this.items = res.data.rows
-          if(res.data.total == 0) {
+          this.total = res.data.total
+          if(this.total == 0) {
             this.sfData = false
           } else {
-            for(var i = 1; i< res.data.total; i++) {
+            for(let i = 1; i< this.total+1; i++) {
               this.options.push(i)
             }
           }
@@ -102,6 +129,51 @@ export default {
           }).show()
         }
       })
+    },
+    queryTab() {
+      toast.show()
+      queryMyBusApp({ 
+        userId: this.$store.getters.userId,
+        page: this.pageSec,
+        pageSize: 5,
+        status: '',
+        createtime: this.value
+      }).then( res => {
+        toast.hide()
+        if(res.code == '000000') {
+          this.items = res.data.rows
+        } else {
+          Dialog.$create({
+              type: 'alert',
+              content: res.message,
+              icon: 'cubeic-alert'
+          }).show()
+        }
+      })
+    },
+    btnQuery(text) {
+      if(text == 'prev' && this.pageSec > 0) {
+        if(this.pageSec == 1) {
+          Dialog.$create({
+              type: 'alert',
+              content: '已经是第一页了',
+              icon: 'cubeic-alert'
+          }).show()
+          return false
+        }
+        this.pageSec--
+      } else if(text == 'next' && this.pageSec < this.total+1) {
+        if(this.pageSec == this.total) {
+          Dialog.$create({
+              type: 'alert',
+              content: '已经是最后一页了',
+              icon: 'cubeic-alert'
+          }).show()
+          return false
+        }
+        this.pageSec++
+      }
+      this.queryTab()
     }
   }
 }
@@ -131,6 +203,8 @@ export default {
       background #F0F3F7
     tr:nth-child(even)
       background #fff
+    td
+      padding 4px
     th,td
       border none
       vertical-align middle
@@ -138,12 +212,19 @@ export default {
       font-size 20px
       line-height 40px
       color #fff
+    button
+      background red
+      height 100%
+      border 0
+      color #fff
+      border-radius 2px
 .btnWrap
   margin 10px 0
   height 50px
   .cube-btn-inline
     height 30px
-    margin 10px 0
+    margin 10px 5px
+    color #fff
   .cube-select
     height 40px
     margin-top 5px

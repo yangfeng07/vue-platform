@@ -39,6 +39,12 @@
 
 <script>
   import { getYzm, login } from '@/request/api'
+  import { mapActions } from 'vuex'
+  import { Toast } from 'cube-ui'
+  const toast = Toast.$create({
+                txt: '加载中...',
+                mask: true
+              })
   export default {
     data() {
       return {
@@ -68,6 +74,7 @@
       }
     },
     methods: {
+      ...mapActions(['GetToken', 'GetUserId']),
       getTime() {
         this.yzmText = this.time-1 + 's后重新发送'
         this.disabled = true
@@ -80,10 +87,6 @@
         this.time--
       },
       sendYzm(refId) {
-        const toast = this.$createToast({
-          txt: 'Loading...',
-          mask: true
-        })
         if(this.phone=='') {
           this.$createDialog({
             type: 'alert',
@@ -110,10 +113,6 @@
         }
       },
       login() {
-        const toast = this.$createToast({
-          txt: 'Loading...',
-          mask: true
-        })
         toast.show()
         login({
           username: this.phone,
@@ -121,9 +120,11 @@
         }).then( res => {
           toast.hide()
           if(res.code == '000000') {
-            sessionStorage.setItem("token", res.data)
-            localStorage.setItem("userId",this.phone)
-            this.$router.push({path:'/Home'})
+            this.GetToken(res.data)
+            this.GetUserId(this.phone)
+            this.$store.dispatch('GetMenu','').then(() => {
+              this.$router.push({path:'/Home'})
+            })
           } else {
             this.$createDialog({
               type: 'alert',

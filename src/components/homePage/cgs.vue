@@ -24,15 +24,16 @@
       <img src="../../assets/wdsq.png" alt="">
       <span style="color: #9A5C04;margin-top: -15px;">我的申请</span>
     </li> -->
-    <li v-for="item in menuData" :key="item.typeId" @click="toStep(item.typeId, item.typeName, 0, item.subTypeList)" :class="styleData.filter(i => i.id == item.typeId)[0].className">
-      <img :src="styleData.filter(i => i.id == item.typeId)[0].imgSrc" alt="">
-      <span :style="styleData.filter(i => i.id == item.typeId)[0].spanStyle">{{ item.typeName }}</span>
+    <li v-for="item in menuData" :key="item.typeId" @click="toStep(item.typeId, item.typeName, item.iconName, item.subTypeList)" :class="styleData.filter(i => i.iconName == item.iconName)[0].className">
+      <img :src="styleData.filter(i => i.iconName == item.iconName)[0].imgSrc" alt="">
+      <span :style="styleData.filter(i => i.iconName == item.iconName)[0].spanStyle">{{ item.typeName }}</span>
     </li>
   </ul>
 </template>
 
 <script>
 import { createBus } from '@/request/api'
+import { mapActions } from 'vuex'
 export default {
   name: 'Home',
   data() {
@@ -40,77 +41,73 @@ export default {
       menuData: '',
       styleData: [
         {
-          id: '01',
+          iconName: "page-nav-li-icon1",
           className: '',
           imgSrc: require('../../assets/tcts.png'),
           spanStyle: ''
         },
         {
-          id: '02',
+          iconName: 'page-nav-li-icon2',
           className: 'left',
           imgSrc: require('../../assets/szc.png'),
           spanStyle: 'font-size:14px;line-height:18px;margin-top:-27px;left: 10px;color: #00A6B3;width: 85px;'
         },
         {
-          id: '03',
+          iconName: 'page-nav-li-icon3',
           className: 'right',
           imgSrc: require('../../assets/dsg.png'),
-          spanStyle: 'font-size:14px;line-height:18px;margin-top:-27px;left: 20px;color: #525CB2;width: 65px;'
+          spanStyle: 'font-size:14px;line-height:18px;margin-top:-27px;left: 10px;color: #525CB2;width: 80px;'
         },
         {
-          id: '04',
+          iconName: 'page-nav-li-icon4',
           className: 'left',
           imgSrc: require('../../assets/lxry.png'),
-          spanStyle: 'font-size:14px;line-height:18px;margin-top:-27px;left: 20px;color: #AB8304;width: 70px;'
+          spanStyle: 'font-size:14px;line-height:18px;margin-top:-27px;left: 20px;color: #AB8304;width: 85px;'
         },
         {
-          id: '05',
+          iconName: 'page-nav-li-icon5',
           className: 'right',
           imgSrc: require('../../assets/fwzy.png'),
           spanStyle: 'font-size:14px;line-height:18px;margin-top:-9px;left: 20px;color: #3976B0;width: 65px;'
         },
         {
-          id: '06',
+          iconName: "page-nav-li-icon6",
           className: '',
           imgSrc: require('../../assets/wdsq.png'),
           spanStyle: 'color: #9A5C04;margin-top: -15px;'
-        },
+        }
       ]
     }
   },
   created() {
-    console.log(11,this.$store.getters.menuData)
-    localStorage.setItem("cnjr", "cgs")
+    localStorage.setItem("sfWdsq", "false")
+    this.$store.dispatch("GetCnjr", "cgs")
     this.menuData = this.$store.getters.menuData
   },
-  // beforeRouteEnter(to, from, next) {
-  //   localStorage.setItem("cnjr", "cgs")
-  //   next(vm=>{
-  //     getMenu({ pid: 0 }).then( res => {
-  //       console.log(res.data)
-  //       if(res.code == '000000') {
-  //         vm.menuData = res.data
-  //       }
-  //     })
-  //   })
-  // },
   methods: {
-      toStep(id, name, subId, subTypeList) {
-        if(id == '06') {
+      ...mapActions(['GetSubList', 'GetBzText', 'GetMasterId']),
+      toStep(id, name, iconName, subTypeList) {
+        const toast = this.$createToast({
+          txt: 'Loading...',
+          mask: true
+        })
+        toast.show()
+        if(iconName == 'page-nav-li-icon6') {
+          toast.hide()
           this.toWdsq()
           return false
         }
         createBus({
-          userId: localStorage.getItem("userId"),
+          userId: this.$store.getters.userId,
           typeId: id,
           typeName: name
         }).then( res => {
           if(res.code == '000000') {
-            console.log(res.data)
-            localStorage.setItem("subTypeList", JSON.stringify(subTypeList))
-            localStorage.setItem("bzText", res.data.name)
-            localStorage.setItem("masterId",res.data.id)
-            this.$router.push({path:'/step/'+subId})
+            toast.hide()
+            this.GetSubList(subTypeList)
+            this.GetBzText(res.data.name)
+            this.GetMasterId(res.data.id)
+            this.$router.push({path:'/step/0'})
           } else {
             this.$createDialog({
               type: 'alert',

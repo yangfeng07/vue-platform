@@ -17,4 +17,4 @@ export const queryBusMasterDetail = data => get('/client/queryBusMasterDetail', 
 //我的申请列表接口
 export const queryMyBusApp = data => get('/client/queryMyBusApp', data)
 //重新发起审核接口
-export const reapply = data => post('/client/reapply', data)
+export const repply = data => post('/client/reapply', data)

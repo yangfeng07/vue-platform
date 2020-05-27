@@ -1,13 +1,13 @@
 <template>
   <div id="home-cont">
-    <div style="text-align: center;position: relative;color: #fff;">
+    <div class="topWrap" style="position: relative;color: #fff;">
         <img class="home-bg" src="../assets/homeBg.png" alt="">
+        <span @click="Return" class="return"><i class="cubeic-back"></i>上一步</span>
         <div class="home-text">
             <i class="cubeic-person"></i>
             您好，{{ userId }}！
-            <span @click="Return" class="return"><i class="cubeic-back"></i>上一步</span>&nbsp; &nbsp; 
-            <span @click="logout" class="logout">退出<i class="cubeic-share"></i></span>
         </div>
+        <span @click="logout" class="logout">退出<i class="cubeic-share"></i></span>
     </div>
     <div class="home-body">
         <keep-alive>
@@ -28,11 +28,10 @@ export default {
     }
   },
   created() {
-    this.userId = localStorage.getItem("userId")
+    this.userId = this.$store.getters.userId
   },
   methods: {
       logout() {
-        console.log(localStorage.getItem("cnjr"))
         Dialog.$create({
           type: 'confirm',
           icon: 'cubeic-alert',
@@ -41,8 +40,6 @@ export default {
             this.$router.push({path:'/'})
           }
         }).show()
-          // this.$router.push({path:'/'})
-          // this.$router.go(0)
       },
       Return() {
         const routeName = this.$route.path
@@ -52,15 +49,13 @@ export default {
             title: '已经是最上一层！',
             icon: 'cubeic-alert'
           }).show()
-        }else if(routeName == '/cgs' || routeName == '/sb') {
+        }else if(routeName == '/cgs' || routeName == '/socialsecurity') {
           this.$router.push({path:'/dashboard'})
         }else{
-          console.log(localStorage.getItem("cnjr"))
-          if(localStorage.getItem("cnjr") == 'cgs') {
+          if(this.$store.getters.cnjr == 'cgs') {
             this.$router.push({path:'/cgs'})
-            // this.$router.go(0)
           } else {
-            this.$router.push({path:'/sb'})
+            this.$router.push({path:'/socialsecurity'})
           }
         }
       }
@@ -83,17 +78,26 @@ export default {
     line-height: 30px;
     font-size: 18px;
     position: absolute;
-    left: 20px;
+    left: 0;
     top: 50%;
+    width: 100%;
+    text-align: center;
     margin-top: -15px;
 }
 .home-body{
     flex:auto;
 }
+.topWrap span{
+  position: absolute;
+  top: 5px;
+  font-size: 18px;
+}
 .logout{
-    color: red;
+    color: #FFFC00;
+    right: 10px;
 }
 .return{
-  color: #FFFC00;
+  color: #FFF;
+  left: 5px;
 }
 </style>
