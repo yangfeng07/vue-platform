@@ -57,24 +57,7 @@ export default {
     }
   },
   created() {
-    // this.subTypeList = this.$store.getters.subTypeList
-    // this.id = this.$route.params.id
-    // this.bzText = this.$store.getters.bzText
-    // this.tIndex = +this.id + 1
-    // this.xText = this.subTypeList[+this.id].subTypeName
-    // if(this.id > 0) {
-    //   this.prev = true
-    // }
-    // this.action.data.detailTypeId = this.subTypeList[+this.id].subTypeId
-  },
-  beforeRouteEnter(to, from, next) {
-    console.log(from.name)
-    if (from.name == 'cgs' || from.name == 'sb' || from.name == 'wdsq') {
-      to.meta.isBack = true
-    }
-    next();
-  },
-  activated() {
+    console.log('step',this.$store.getters.subTypeList)
     this.subTypeList = this.$store.getters.subTypeList
     this.id = this.$route.params.id
     this.bzText = this.$store.getters.bzText
@@ -84,6 +67,14 @@ export default {
       this.prev = true
     }
     this.action.data.detailTypeId = this.subTypeList[+this.id].subTypeId
+  },
+  beforeRouteEnter(to, from, next) {
+    if (from.name == 'cgs' || from.name == 'sb' || from.name == 'wdsq') {
+      to.meta.isBack = true
+    }
+    next();
+  },
+  activated() {
     if (this.$route.meta.isBack) {
       const file = this.files[0]
       file && this.$refs.upload.removeFile(file)

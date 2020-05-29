@@ -214,7 +214,7 @@ export default {
       color #fff
     button
       background red
-      height 30px
+      height 100%
       border 0
       color #fff
       border-radius 2px

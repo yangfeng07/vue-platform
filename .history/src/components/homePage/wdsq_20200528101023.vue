@@ -97,6 +97,7 @@ export default {
                     subTypeName: item.busDetailName,
                   }
         })
+        console.log(arr)
         this.GetSubList(arr)
         this.$router.push({path:'/step/0'})
       })
@@ -214,7 +215,7 @@ export default {
       color #fff
     button
       background red
-      height 30px
+      height 100%
       border 0
       color #fff
       border-radius 2px

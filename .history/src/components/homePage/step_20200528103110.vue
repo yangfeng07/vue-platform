@@ -68,13 +68,13 @@ export default {
     // this.action.data.detailTypeId = this.subTypeList[+this.id].subTypeId
   },
   beforeRouteEnter(to, from, next) {
-    console.log(from.name)
     if (from.name == 'cgs' || from.name == 'sb' || from.name == 'wdsq') {
       to.meta.isBack = true
     }
     next();
   },
   activated() {
+    console.log(this.$store.getters.subTypeList)
     this.subTypeList = this.$store.getters.subTypeList
     this.id = this.$route.params.id
     this.bzText = this.$store.getters.bzText
