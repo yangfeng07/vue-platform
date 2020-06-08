@@ -37,8 +37,10 @@ const app = {
             state.masterId = masterId
         },
         SET_STEPID: (state, stepId) => {
-            if(stepId > state.stepId || stepId == 0) {
+            if(stepId > state.stepId) {
                 state.stepId = stepId
+            } else {
+                state.stepId = state.stepId
             }
         },
     },

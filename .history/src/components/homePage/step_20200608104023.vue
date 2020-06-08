@@ -76,9 +76,7 @@ export default {
     if (from.name == 'cgs' || from.name == 'sb' || from.name == 'wdsq') {
       to.meta.isBack = true
     }
-    next(vm => {
-      vm.$store.dispatch('GetStepId', 0)
-    })
+    next();
   },
   activated() {
     this.subTypeList = this.$store.getters.subTypeList

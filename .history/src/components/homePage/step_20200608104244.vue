@@ -77,8 +77,8 @@ export default {
       to.meta.isBack = true
     }
     next(vm => {
-      vm.$store.dispatch('GetStepId', 0)
-    })
+      
+    });
   },
   activated() {
     this.subTypeList = this.$store.getters.subTypeList

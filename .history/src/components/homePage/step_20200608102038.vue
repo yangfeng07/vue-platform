@@ -72,13 +72,11 @@ export default {
     // this.action.data.detailTypeId = this.subTypeList[+this.id].subTypeId
   },
   beforeRouteEnter(to, from, next) {
-    console.log(to)
+    console.log(from.name)
     if (from.name == 'cgs' || from.name == 'sb' || from.name == 'wdsq') {
       to.meta.isBack = true
     }
-    next(vm => {
-      vm.$store.dispatch('GetStepId', 0)
-    })
+    next();
   },
   activated() {
     this.subTypeList = this.$store.getters.subTypeList

@@ -61,24 +61,15 @@ export default {
     }
   },
   created() {
-    // this.subTypeList = this.$store.getters.subTypeList
-    // this.id = this.$route.params.id
-    // this.bzText = this.$store.getters.bzText
-    // this.tIndex = +this.id + 1
-    // this.xText = this.subTypeList[+this.id].subTypeName
-    // if(this.id > 0) {
-    //   this.prev = true
-    // }
-    // this.action.data.detailTypeId = this.subTypeList[+this.id].subTypeId
+    console.log(this.$route.params)
+    // this.$store.dispatch('GetMasterId',masterId)
   },
   beforeRouteEnter(to, from, next) {
-    console.log(to)
+    console.log(from.name)
     if (from.name == 'cgs' || from.name == 'sb' || from.name == 'wdsq') {
       to.meta.isBack = true
     }
-    next(vm => {
-      vm.$store.dispatch('GetStepId', 0)
-    })
+    next();
   },
   activated() {
     this.subTypeList = this.$store.getters.subTypeList
@@ -95,11 +86,6 @@ export default {
       file && this.$refs.upload.removeFile(file)
       this.sfysc = false
     }
-    if(this.$route.params.id > this.$store.getters.stepId) {
-      const file = this.files[0]
-      file && this.$refs.upload.removeFile(file)
-      this.sfysc = false
-    }
   },
   methods: {
     checkSuccess(res) {
@@ -110,7 +96,7 @@ export default {
       return false
     },
     prevFun() {
-      this.$store.dispatch('GetStepId',this.$route.params.id)
+      console.log(this.$route.params)
       this.$route.meta.isBack = false
       this.$router.push({name:'step',params: {id: this.id-1}})
     },

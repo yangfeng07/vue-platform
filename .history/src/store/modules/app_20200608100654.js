@@ -9,7 +9,7 @@ const app = {
         subTypeList: [],
         bzText: '',
         masterId: '',
-        stepId: 0
+        stepId: ''
     },
     mutations: {
         SET_USERID: (state, userId) => {
@@ -37,9 +37,7 @@ const app = {
             state.masterId = masterId
         },
         SET_STEPID: (state, stepId) => {
-            if(stepId > state.stepId || stepId == 0) {
-                state.stepId = stepId
-            }
+            state.stepId = stepId
         },
     },
     actions: {
