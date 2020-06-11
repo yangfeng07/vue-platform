@@ -110,9 +110,6 @@
               this.disabled = true
               this.timer = setInterval(this.getTime, 1000)
             }
-          }).catch( err => {
-            console.log(err)
-            toast.hide()
           })
         }
       },

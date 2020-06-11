@@ -30,8 +30,7 @@ import { Dialog, Toast } from 'cube-ui'
 import { createBusRemind, reapply } from '@/request/api'
 const toast = Toast.$create({
                 txt: '加载中...',
-                mask: true,
-                time: 0
+                mask: true
               })
 export default {
   name: 'Home',
@@ -52,9 +51,9 @@ export default {
       sfysc: false,
       files: [],
       imgs: [],
-      bzText: '',
+      bzText: '提交退车退税资料',
       tIndex: 1,
-      xText: "",
+      xText: "车辆购置税退税申请表",
       play: false,
       subTypeList: [],
       id: '',
@@ -82,18 +81,7 @@ export default {
     })
   },
   activated() {
-    if (this.$route.meta.isBack) {
-      const file = this.files[0]
-      file && this.$refs.upload.removeFile(file)
-      this.sfysc = false
-    }
-    if(this.$route.params.id > this.$store.getters.stepId) {
-      const file = this.files[0]
-      file && this.$refs.upload.removeFile(file)
-      this.sfysc = false
-    }
     this.subTypeList = this.$store.getters.subTypeList
-    console.log(this.subTypeList)
     this.id = this.$route.params.id
     this.bzText = this.$store.getters.bzText
     this.tIndex = +this.id + 1
@@ -104,6 +92,16 @@ export default {
     this.action.data.userId = this.$store.getters.userId
     this.action.data.masterId = this.$store.getters.masterId
     this.action.data.detailTypeId = this.subTypeList[+this.id].subTypeId
+    if (this.$route.meta.isBack) {
+      const file = this.files[0]
+      file && this.$refs.upload.removeFile(file)
+      this.sfysc = false
+    }
+    if(this.$route.params.id > this.$store.getters.stepId) {
+      const file = this.files[0]
+      file && this.$refs.upload.removeFile(file)
+      this.sfysc = false
+    }
   },
   methods: {
     checkSuccess(res) {

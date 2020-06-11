@@ -38,7 +38,8 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const role = store.state.app.token
+    console.log(store.state.token)
+    const role = store.state.token
     if(!role && to.path !== '/') {
         next('/')
     } else {

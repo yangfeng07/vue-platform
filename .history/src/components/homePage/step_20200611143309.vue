@@ -30,8 +30,7 @@ import { Dialog, Toast } from 'cube-ui'
 import { createBusRemind, reapply } from '@/request/api'
 const toast = Toast.$create({
                 txt: '加载中...',
-                mask: true,
-                time: 0
+                mask: true
               })
 export default {
   name: 'Home',

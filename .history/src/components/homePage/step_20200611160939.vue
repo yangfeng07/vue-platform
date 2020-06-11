@@ -141,7 +141,7 @@ export default {
       toast.show()
       method({
         userId: this.$store.getters.userId,
-        masterId: this.$store.getters.masterId
+        massterId: this.$store.getters.masterId
       }).then( res => {
         toast.hide()
         if(res.code == '000000') {

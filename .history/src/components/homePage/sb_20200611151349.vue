@@ -63,14 +63,6 @@ export default {
         this.toWdsq()
         return false
       }
-      if(subTypeList.length == 0) {
-          this.$createDialog({
-            type: 'alert',
-            content: '模块暂未开放',
-            icon: 'cubeic-alert'
-          }).show()
-          return false
-        }
       toast.show()
       createBus({
         userId: this.$store.getters.userId,

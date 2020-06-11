@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login'
 import Home from '../components/Home'
-import store from '../store'
+import store from '../store/'
 
 Vue.use(VueRouter)
 
@@ -38,7 +38,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    const role = store.state.app.token
+    const role = sessionStorage.getItem('token')
     if(!role && to.path !== '/') {
         next('/')
     } else {

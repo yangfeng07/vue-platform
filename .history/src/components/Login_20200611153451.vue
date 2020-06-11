@@ -54,7 +54,7 @@
         timer: undefined,
         yzmText: '发送验证码',
         phone: '',
-        placeholder: '请输入手机号',
+        placeholder: '请输入手机号1',
         maxlength: 11,
         type: 'number',
         valid: undefined,
@@ -110,9 +110,6 @@
               this.disabled = true
               this.timer = setInterval(this.getTime, 1000)
             }
-          }).catch( err => {
-            console.log(err)
-            toast.hide()
           })
         }
       },

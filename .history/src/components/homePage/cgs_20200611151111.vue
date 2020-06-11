@@ -82,11 +82,6 @@ export default {
   created() {
     localStorage.setItem("sfWdsq", "false")
     this.$store.dispatch("GetCnjr", "cgs")
-    var arr = []
-    arr = this.$store.getters.menuData.filter(function(item) {
-      return item.iconName == 'page-nav-li-icon1' || item.iconName == 'page-nav-li-icon6'
-    })
-    console.log(arr)
     this.menuData = this.$store.getters.menuData
   },
   methods: {

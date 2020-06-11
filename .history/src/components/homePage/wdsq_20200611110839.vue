@@ -14,7 +14,7 @@
         </tr>
         <tr v-for="item in items" :key="item.busRemindId">
           <td>{{ item.busName }}</td>
-          <td :class="item.busStatus==0?'' : (item.busStatus==1?'pass' : (item.busStatus==2?'noPass' : 'rePass'))">{{ item.busStatus==0?'未审核' : (item.busStatus==1?'审核通过' : (item.busStatus==2?'审核未通过' : '重新提交')) }}</td>
+          <td>{{ item.busStatus==0?'未审核' : (item.busStatus==1?'审核通过' : (item.busStatus==2?'审核未通过' : '重新提交')) }}</td>
           <td>{{ item.createtime }}</td>
           <td>
             <button @click="reload(item.busMasterId, item.busName)" v-show="item.busStatus==2?true : false">重新上传</button>
@@ -37,8 +37,7 @@ import { Dialog, Toast } from 'cube-ui'
 import { mapActions } from 'vuex'
 const toast = Toast.$create({
                 txt: '加载中...',
-                mask: true,
-                time: 0
+                mask: true
               })
 export default {
   name: 'Home',
@@ -91,19 +90,15 @@ export default {
       }).then( res => {
         console.log(res)
         console.log(this.$store.getters.subTypeList)
-        let arr = []
-        res.data.forEach(function(item){
+        var arr = res.data.map(function(item){
           if(item.busDetailStatus == '2') {
-            arr.push(
-              {
-                subTypeDescription: item.description,
-                subTypeId: item.detailTypeId,
-                subTypeName: item.busDetailName,
-              }
-            )
+            return {
+                    subTypeDescription: item.description,
+                    subTypeId: item.detailTypeId,
+                    subTypeName: item.busDetailName,
+                  }
           }
         })
-        console.log(arr)
         this.GetSubList(arr)
         this.$router.push({path:'/step/0'})
       })
@@ -210,12 +205,6 @@ export default {
       background #F0F3F7
     tr:nth-child(even)
       background #fff
-    .pass
-      color green
-    .noPass
-      color red
-    .rePass
-      color yellow
     td
       padding 4px
     th,td

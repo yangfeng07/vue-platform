@@ -82,34 +82,22 @@ export default {
   created() {
     localStorage.setItem("sfWdsq", "false")
     this.$store.dispatch("GetCnjr", "cgs")
-    var arr = []
-    arr = this.$store.getters.menuData.filter(function(item) {
-      return item.iconName == 'page-nav-li-icon1' || item.iconName == 'page-nav-li-icon6'
-    })
-    console.log(arr)
     this.menuData = this.$store.getters.menuData
   },
   methods: {
       ...mapActions(['GetSubList', 'GetBzText', 'GetMasterId']),
       toStep(id, name, iconName, subTypeList) {
+        console.log(subTypeList)
         const toast = this.$createToast({
           txt: 'Loading...',
-          mask: true,
-          time: 0
+          mask: true
         })
+        toast.show()
         if(iconName == 'page-nav-li-icon6') {
+          toast.hide()
           this.toWdsq()
           return false
         }
-        if(subTypeList.length == 0) {
-          this.$createDialog({
-            type: 'alert',
-            content: '模块暂未开放',
-            icon: 'cubeic-alert'
-          }).show()
-          return false
-        }
-        toast.show()
         createBus({
           userId: this.$store.getters.userId,
           typeId: id,

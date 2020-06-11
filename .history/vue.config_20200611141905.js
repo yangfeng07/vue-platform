@@ -16,15 +16,15 @@ module.exports = {
     }
   },
   publicPath: './',
-  // devServer: {
-  //   proxy: {
-  //     '/api':{
-  //       target: process.env.VUE_APP_API_ROOT,
-  //       changeOrigin: true,
-  //       pathRewrite: {
-  //           '/api':'http://localhost:8080'
-  //       }
-  //     },
-  //   }
-  // }
+  devServer: {
+    proxy: {
+      '/api':{
+        target: process.env.VUE_APP_API_ROOT,
+        changeOrigin: true,
+        pathRewrite: {
+            '/api':'http://localhost:8080'
+        }
+      },
+    }
+  }
 }

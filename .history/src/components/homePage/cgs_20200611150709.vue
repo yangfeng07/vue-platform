@@ -82,11 +82,6 @@ export default {
   created() {
     localStorage.setItem("sfWdsq", "false")
     this.$store.dispatch("GetCnjr", "cgs")
-    var arr = []
-    arr = this.$store.getters.menuData.filter(function(item) {
-      return item.iconName == 'page-nav-li-icon1' || item.iconName == 'page-nav-li-icon6'
-    })
-    console.log(arr)
     this.menuData = this.$store.getters.menuData
   },
   methods: {
@@ -94,10 +89,10 @@ export default {
       toStep(id, name, iconName, subTypeList) {
         const toast = this.$createToast({
           txt: 'Loading...',
-          mask: true,
-          time: 0
+          mask: true
         })
         if(iconName == 'page-nav-li-icon6') {
+          toast.hide()
           this.toWdsq()
           return false
         }
@@ -116,7 +111,7 @@ export default {
           typeName: name
         }).then( res => {
           if(res.code == '000000') {
-            toast.hide()
+            // toast.hide()
             this.GetSubList(subTypeList)
             this.GetBzText(res.data.name)
             this.GetMasterId(res.data.id)

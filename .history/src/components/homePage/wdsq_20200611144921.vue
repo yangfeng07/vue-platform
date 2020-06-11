@@ -37,8 +37,7 @@ import { Dialog, Toast } from 'cube-ui'
 import { mapActions } from 'vuex'
 const toast = Toast.$create({
                 txt: '加载中...',
-                mask: true,
-                time: 0
+                mask: true
               })
 export default {
   name: 'Home',
