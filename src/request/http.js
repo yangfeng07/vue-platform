@@ -9,7 +9,7 @@ Vue.use(Dialog)
 //创建axios实例
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 const service = axios.create({
-    baseURL: 'http://192.168.1.114:9092',
+    baseURL: 'http://cspclient.utools.club',
     timeout: 10000
 })
 

@@ -16,6 +16,9 @@ module.exports = {
     }
   },
   publicPath: './',
+  devServer: {
+    disableHostCheck: true
+  }
   // devServer: {
   //   proxy: {
   //     '/api':{
