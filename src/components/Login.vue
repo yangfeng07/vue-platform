@@ -117,26 +117,36 @@
         }
       },
       login() {
-        toast.show()
-        login({
-          username: this.phone,
-          smsCode: this.yzm
-        }).then( res => {
-          toast.hide()
-          if(res.code == '000000') {
-            this.GetToken(res.data)
-            this.GetUserId(this.phone)
-            this.$store.dispatch('GetMenu','').then(() => {
-              this.$router.push({path:'/Home'})
-            })
-          } else {
-            this.$createDialog({
-              type: 'alert',
-              content: res.msg,
-              icon: 'cubeic-alert'
-            }).show()
-          }
-        })
+        if(this.phone=='') {
+          this.$createDialog({
+            type: 'alert',
+            content: '请填写手机号码',
+            icon: 'cubeic-alert'
+          }).show()
+          return false
+        }
+        if(this.valid) {
+          toast.show()
+          login({
+            username: this.phone,
+            smsCode: this.yzm
+          }).then( res => {
+            toast.hide()
+            if(res.code == '000000') {
+              this.GetToken(res.data)
+              this.GetUserId(this.phone)
+              this.$store.dispatch('GetMenu','').then(() => {
+                this.$router.push({path:'/Home'})
+              })
+            } else {
+              this.$createDialog({
+                type: 'alert',
+                content: res.msg,
+                icon: 'cubeic-alert'
+              }).show()
+            }
+          })
+        }
       }
     }
   }

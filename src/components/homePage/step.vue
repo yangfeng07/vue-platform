@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       action: {
-        target: 'http://cspclient.utools.club/client/uploadFile',
+        target: 'http://192.168.1.229:9092/client/uploadFile',
         headers: {
           token: this.$store.getters.token
         },

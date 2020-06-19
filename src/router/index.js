@@ -2,21 +2,27 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login'
 import Home from '../components/Home'
+import System from '../components/System'
 import store from '../store'
 
 Vue.use(VueRouter)
 
 const router = new VueRouter({
     routes: [
-        // {
-        //     path: '/',
-        //     name: 'login',
-        //     redirect: '/login'
-        // },
         {
             path: '/',
+            name: 'system',
+            redirect: '/system'
+        },
+        {
+            path: '/login',
             name: 'login',
             component: Login
+        },
+        {
+            path: '/system',
+            name: 'system',
+            component: System
         },
         {
             path: '/home',
@@ -39,7 +45,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     const role = store.state.app.token
-    if(!role && to.path !== '/') {
+    if(!role && to.path !== '/system' && to.path !== '/login') {
         next('/')
     } else {
         next()

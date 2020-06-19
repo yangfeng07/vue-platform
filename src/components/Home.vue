@@ -35,7 +35,7 @@ export default {
         Dialog.$create({
           type: 'confirm',
           icon: 'cubeic-alert',
-          title: '是否确认退出登录？',
+          title: '是否确认退出？',
           onConfirm: () => {
             this.$router.push({path:'/'})
           }
