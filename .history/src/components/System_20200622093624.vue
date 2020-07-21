@@ -29,7 +29,7 @@ export default {
         this.$router.push({path: url})
     },
     toZnStep() {
-        window.location.href = 'http://csp.hxdkfp.com:7200/whscgsywdb'
+        window.location.href = 'http://192.168.1.221:7078/whscgsywdb'
     }
   }
 }
